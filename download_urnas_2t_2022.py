@@ -6,7 +6,7 @@ import pandas as pd
 
 
 SIGLAS = ['AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MT', 'MS', 'MG',
-     'PA', 'PB', 'PR', 'PE', 'PI', 'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO']
+     'PA', 'PB', 'PR', 'PE', 'PI', 'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO', 'ZZ']
 
 def get_url(sigla):
     s_1 = "https://cdn.tse.jus.br/estatistica/sead/eleicoes/eleicoes2022/buweb/bweb_2t_"
@@ -47,12 +47,14 @@ def run():
         boletim_fname = get_boletim_fname(sigla)
         with ZipFile(local_fname, 'r') as zfile:
             boletim = zfile.extract(boletim_fname)
-            df_ = pd.read_csv(boletim, encoding='latin1')
+            df_ = pd.read_csv(boletim, encoding='latin1', sep=';')
             data_frames.append(df_)
-        
-    df_total = pd.concat(data_frames)
-    df_total.to_csv('boletins_2t_presidente_2022.csv')
 
+    print("Todos os arquivos foram carregados. Concatenando...")
+    df_total = pd.concat(data_frames)
+    print("Salvando arquivo final")
+    df_total.to_csv('boletins_2t_presidente_2022.csv')
+    print("Boletins de urna salvos para boletins_2t_presidente_2022.csv")
 
 
 if __name__ == "__main__":
